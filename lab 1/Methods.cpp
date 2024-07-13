@@ -1,45 +1,45 @@
 #include "Methods.hpp"
 #include <cmath>
 
-// Конструктор базового класса
-IntegralCalculator::IntegralCalculator(int numPoints, double tolerance)
-    : numPoints(numPoints), tolerance(tolerance) {
-    if (numPoints <= 1) {
-        throw std::invalid_argument("Число должно быть больше 1");
-    }
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°
+IntegralCalculator::IntegralCalculator(double tolerance)
+    : tolerance(tolerance) {
     if (tolerance <= 0) {
-        throw std::invalid_argument("Точность должна быть положительной");
+        throw std::invalid_argument("РўРѕС‡РЅРѕСЃС‚СЊ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕР№");
     }
 }
 
-// Метод для установки шага вычисления
-void IntegralCalculator::setStep(double lowerBound, double upperBound) {
-    step = (upperBound - lowerBound) / (numPoints - 1); // (длина интервала)/(кол-во интервалов между точками)
+// РњРµС‚РѕРґ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё С€Р°РіР° РІС‹С‡РёСЃР»РµРЅРёСЏ
+void IntegralCalculator::setStep(double lowerBound, double upperBound, int numPoints) {
+    step = (upperBound - lowerBound) / (numPoints - 1); // (РґР»РёРЅР° РёРЅС‚РµСЂРІР°Р»Р°)/(РєРѕР»-РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ РјРµР¶РґСѓ С‚РѕС‡РєР°РјРё)
 }
 
-// Конструктор класса для метода трапеций
-TrapezoidalIntegralCalculator::TrapezoidalIntegralCalculator(int numPoints, double tolerance)
-    : IntegralCalculator(numPoints, tolerance) {}
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° РґР»СЏ РјРµС‚РѕРґР° С‚СЂР°РїРµС†РёР№
+TrapezoidalIntegralCalculator::TrapezoidalIntegralCalculator(double tolerance)
+    : IntegralCalculator(tolerance) {}
 
-// Реализация метода расчета интеграла методом трапеций
-double TrapezoidalIntegralCalculator::Calc(std::function<double(double)> func, double lowerBound, double upperBound) {
-   
-    setStep(lowerBound, upperBound); // Установка шага интегрирования
+// Р РµР°Р»РёР·Р°С†РёСЏ РјРµС‚РѕРґР° СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»Р° РјРµС‚РѕРґРѕРј С‚СЂР°РїРµС†РёР№
+double TrapezoidalIntegralCalculator::Calc(std::function<double(double)> func, double lowerBound, double upperBound, int numPoints) {
+    if (numPoints <= 1) {
+        throw std::invalid_argument("Р§РёСЃР»Рѕ С‚РѕС‡РµРє РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 1");
+    }
+
+    setStep(lowerBound, upperBound, numPoints); // РЈСЃС‚Р°РЅРѕРІРєР° С€Р°РіР° РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ
 
     double integral = 0.0;
 
-    // Вычисление суммы значений функции в точках интегрирования
+    // Р’С‹С‡РёСЃР»РµРЅРёРµ СЃСѓРјРјС‹ Р·РЅР°С‡РµРЅРёР№ С„СѓРЅРєС†РёРё РІ С‚РѕС‡РєР°С… РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ
     for (int i = 0; i < numPoints; ++i) {
-        // Текущее значения аргумента функции
+        // РўРµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚Р° С„СѓРЅРєС†РёРё
         double x = lowerBound + i * step;
 
-        // Значение функции в текущей точке и добавление его к результату интегрирования
+        // Р—РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё РІ С‚РµРєСѓС‰РµР№ С‚РѕС‡РєРµ Рё РґРѕР±Р°РІР»РµРЅРёРµ РµРіРѕ Рє СЂРµР·СѓР»СЊС‚Р°С‚Сѓ РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ
         if (i == 0 || i == numPoints - 1) {
-            // Если точка крайняя, добавляем значение функции, разделенное на 2 (половина высоты трапеции)
+            // Р•СЃР»Рё С‚РѕС‡РєР° РєСЂР°Р№РЅСЏСЏ, РґРѕР±Р°РІР»СЏРµРј Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё, СЂР°Р·РґРµР»РµРЅРЅРѕРµ РЅР° 2 (РїРѕР»РѕРІРёРЅР° РІС‹СЃРѕС‚С‹ С‚СЂР°РїРµС†РёРё)
             integral += func(x) / 2.0;
         }
         else {
-            // Иначе добавляем значение функции в полной высоте трапеции
+            // РРЅР°С‡Рµ РґРѕР±Р°РІР»СЏРµРј Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё РІ РїРѕР»РЅРѕР№ РІС‹СЃРѕС‚Рµ С‚СЂР°РїРµС†РёРё
             integral += func(x);
         }
     }
@@ -48,38 +48,34 @@ double TrapezoidalIntegralCalculator::Calc(std::function<double(double)> func, d
     return integral;
 }
 
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° РґР»СЏ РјРµС‚РѕРґР° РЎРёРјРїСЃРѕРЅР°
+SimpsonIntegralCalculator::SimpsonIntegralCalculator(double tolerance)
+    : IntegralCalculator(tolerance) {}
 
-// Конструктор класса для метода Симпсона
-SimpsonIntegralCalculator::SimpsonIntegralCalculator(int numPoints, double tolerance)
-    : IntegralCalculator(numPoints, tolerance) {
+// Р РµР°Р»РёР·Р°С†РёСЏ РјРµС‚РѕРґР° СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»Р° РјРµС‚РѕРґРѕРј РЎРёРјРїСЃРѕРЅР°
+double SimpsonIntegralCalculator::Calc(std::function<double(double)> func, double lowerBound, double upperBound, int numPoints) {
+    if (numPoints <= 1) {
+        throw std::invalid_argument("Р§РёСЃР»Рѕ С‚РѕС‡РµРє РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 1");
+    }
     if (numPoints % 2 == 0) {
-        throw std::invalid_argument("По правилу Симпсона количество должно быть нечетным");
+        throw std::invalid_argument("РџРѕ РїСЂР°РІРёР»Сѓ РЎРёРјРїСЃРѕРЅР° РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµС‡РµС‚РЅС‹Рј");
     }
-}
 
-// Реализация метода расчета интеграла методом Симпсона
-double SimpsonIntegralCalculator::Calc(std::function<double(double)> func, double lowerBound, double upperBound) {
+    // РЈСЃС‚Р°РЅРѕРІРєР° С€Р°РіР° РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ
+    setStep(lowerBound, upperBound, numPoints);
 
-    /*
-    I = (h/3) * [f(x0) + 4*f(x1) + 2*f(x2) + 4*f(x3) + ... + 2*f(xn-2) + 4*f(xn-1) + f(xn)]
-    */
+    double integral = func(lowerBound) + func(upperBound); // РЎСѓРјРјР° Р·РЅР°С‡РµРЅРёР№ С„СѓРЅРєС†РёРё РЅР° РіСЂР°РЅРёС†Р°С…
 
-
-    // Установка шага интегрирования
-    setStep(lowerBound, upperBound);
-
-    double integral = func(lowerBound) + func(upperBound); // Сумма значений функции на границах
-
-    // Сумма значений функции в точках интегрирования (четные)
+    // РЎСѓРјРјР° Р·РЅР°С‡РµРЅРёР№ С„СѓРЅРєС†РёРё РІ С‚РѕС‡РєР°С… РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ (С‡РµС‚РЅС‹Рµ)
     for (int i = 1; i < numPoints - 1; i += 2) {
-        double x = lowerBound + i * step; // Вычисление текущей точки
-        integral += 4 * func(x); // Добавление к сумме значения функции, умноженного на 4
+        double x = lowerBound + i * step; // Р’С‹С‡РёСЃР»РµРЅРёРµ С‚РµРєСѓС‰РµР№ С‚РѕС‡РєРё
+        integral += 4 * func(x); // Р”РѕР±Р°РІР»РµРЅРёРµ Рє СЃСѓРјРјРµ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё, СѓРјРЅРѕР¶РµРЅРЅРѕРіРѕ РЅР° 4
     }
 
-    // нечетные
+    // РЅРµС‡РµС‚РЅС‹Рµ
     for (int i = 2; i < numPoints - 1; i += 2) {
-        double x = lowerBound + i * step; // Текущая точки
-        integral += 2 * func(x); 
+        double x = lowerBound + i * step; // РўРµРєСѓС‰Р°СЏ С‚РѕС‡РєРё
+        integral += 2 * func(x);
     }
 
     integral *= step / 3.0;
