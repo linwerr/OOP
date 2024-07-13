@@ -6,221 +6,202 @@
 #include <vector>
 
 template<class T>
-class Array3d
-{
+class Array3d {
 private:
     std::vector<T> data;
-    int dim0, dim1, dim2; //размеры
+    int dim0, dim1, dim2; //СЂР°Р·РјРµСЂС‹
 
-public:
-    // Конструктор класса Array3d
-    Array3d(int dim0, int dim1, int dim2) : dim0(dim0), dim1(dim1), dim2(dim2), data(dim0* dim1* dim2) {}
-
-    // Индексатор для доступа к элементам массива по трехмерным координатам (i, j, k)
-    T& operator()(int i, int j, int k)
-    {
-        return data[i * dim1 * dim2 + j * dim2 + k];
+    // РњРµС‚РѕРґ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РёРЅРґРµРєСЃР° РІ РѕРґРЅРѕРјРµСЂРЅРѕРј РјР°СЃСЃРёРІРµ РЅР° РѕСЃРЅРѕРІРµ С‚СЂРµС…РјРµСЂРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚
+    int index(int i, int j, int k) const {
+        return i * dim1 * dim2 + j * dim2 + k;
     }
 
-    // Метод GetValues0(int i): возвращает срез массива по первой координате (i, .., ..)
+public:
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° Array3d
+    Array3d(int dim0, int dim1, int dim2) : dim0(dim0), dim1(dim1), dim2(dim2), data(dim0* dim1* dim2) {}
+
+    // РРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє СЌР»РµРјРµРЅС‚Р°Рј РјР°СЃСЃРёРІР° РїРѕ С‚СЂРµС…РјРµСЂРЅС‹Рј РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (i, j, k)
+    T& operator()(int i, int j, int k) {
+        return data[index(i, j, k)];
+    }
+
+    // РњРµС‚РѕРґ GetValues0(int i): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РїРµСЂРІРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ (i, .., ..)
     std::vector<T> GetValues0(int i) const;
 
-    // Метод GetValues1(int j): возвращает срез массива по второй координате (.., j, ..)
+    // РњРµС‚РѕРґ GetValues1(int j): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ (.., j, ..)
     std::vector<T> GetValues1(int j) const;
 
-    // Метод GetValues2(int k): возвращает срез массива по третьей координате (.., .., k)
+    // РњРµС‚РѕРґ GetValues2(int k): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ (.., .., k)
     std::vector<T> GetValues2(int k) const;
 
-    // Метод GetValues01(int i, int j): возвращает срез массива по первой и второй координатам (i, j, ..)
+    // РњРµС‚РѕРґ GetValues01(int i, int j): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РїРµСЂРІРѕР№ Рё РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (i, j, ..)
     std::vector<T> GetValues01(int i, int j) const;
 
-    // Метод GetValues02(int i, int k): возвращает срез массива по первой и третьей координатам (i, .., k)
+    // РњРµС‚РѕРґ GetValues02(int i, int k): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РїРµСЂРІРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (i, .., k)
     std::vector<T> GetValues02(int i, int k) const;
 
-    // Метод GetValues12(int j, int k): возвращает срез массива по второй и третьей координатам (.., j, k)
+    // РњРµС‚РѕРґ GetValues12(int j, int k): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (.., j, k)
     std::vector<T> GetValues12(int j, int k) const;
 
-    // Метод SetValues0(int i, [][]arr): устанавливает значения в массиве для заданной первой координаты
+    // РњРµС‚РѕРґ SetValues0(int i, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РїРµСЂРІРѕР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
     void SetValues0(int i, const std::vector<std::vector<T>>& arr);
 
-    // Метод SetValues1(int j, [][]arr): устанавливает значения в массиве для заданной второй координаты
+    // РњРµС‚РѕРґ SetValues1(int j, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
     void SetValues1(int j, const std::vector<std::vector<T>>& arr);
 
-    // Метод SetValues2(int k, [][]arr): устанавливает значения в массиве для заданной третьей координаты
+    // РњРµС‚РѕРґ SetValues2(int k, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
     void SetValues2(int k, const std::vector<std::vector<T>>& arr);
 
-    // Метод SetValues01(int i, int j, [][]arr): устанавливает значения в массиве для заданных первой и второй координат
+    // РњРµС‚РѕРґ SetValues01(int i, int j, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РїРµСЂРІРѕР№ Рё РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚
     void SetValues01(int i, int j, const std::vector<std::vector<T>>& arr);
 
-    // Метод SetValues02(int i, int k, [][]arr): устанавливает значения в массиве для заданных первой и третьей координат
+    // РњРµС‚РѕРґ SetValues02(int i, int k, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РїРµСЂРІРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚
     void SetValues02(int i, int k, const std::vector<std::vector<T>>& arr);
 
-    // Метод SetValues12(int j, int k, [][]arr): устанавливает значения в массиве для заданных второй и третьей координат
+    // РњРµС‚РѕРґ SetValues12(int j, int k, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚
     void SetValues12(int j, int k, const std::vector<std::vector<T>>& arr);
 };
 
-
-
-// Метод GetValues0(int i): возвращает срез массива по первой координате (i, .., ..)
+// РњРµС‚РѕРґ GetValues0(int i): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РїРµСЂРІРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ (i, .., ..)
 template<typename T>
 std::vector<T> Array3d<T>::GetValues0(int i) const {
-    std::vector<T> slice(dim1 * dim2); // Вектор для хранения среза по первой координате
-    // Проходим по всем элементам второй и третьей координат
+    std::vector<T> slice(dim1 * dim2); // Р’РµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃСЂРµР·Р° РїРѕ РїРµСЂРІРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ
+    // РџСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚
     for (int j = 0; j < dim1; j++) {
         for (int k = 0; k < dim2; k++) {
-            // Заполняем вектор элементами из исходного массива
-            slice[j * dim2 + k] = data[i * dim1 * dim2 + j * dim2 + k];
+            // Р—Р°РїРѕР»РЅСЏРµРј РІРµРєС‚РѕСЂ СЌР»РµРјРµРЅС‚Р°РјРё РёР· РёСЃС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°
+            slice[j * dim2 + k] = data[index(i, j, k)];
         }
     }
-    return slice; // Возвращаем срез
+    return slice; // Р’РѕР·РІСЂР°С‰Р°РµРј СЃСЂРµР·
 }
 
-// Метод GetValues1(int j): возвращает срез массива по второй координате (.., j, ..)
+// РњРµС‚РѕРґ GetValues1(int j): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ (.., j, ..)
 template<typename T>
 std::vector<T> Array3d<T>::GetValues1(int j) const {
     std::vector<T> slice(dim0 * dim2);
     for (int i = 0; i < dim0; i++) {
         for (int k = 0; k < dim2; k++) {
-            slice[i * dim2 + k] = data[i * dim1 * dim2 + j * dim2 + k];
+            slice[i * dim2 + k] = data[index(i, j, k)];
         }
     }
     return slice;
 }
 
-
-// Метод GetValues2(int k): возвращает срез массива по третьей координате (.., .., k)
+// РњРµС‚РѕРґ GetValues2(int k): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚Рµ (.., .., k)
 template<typename T>
-std::vector<T> Array3d<T>::GetValues2(int k) const
-{
+std::vector<T> Array3d<T>::GetValues2(int k) const {
     std::vector<T> slice(dim0 * dim1);
-    for (int i = 0; i < dim0; i++)
-    {
-        for (int j = 0; j < dim1; j++)
-        {
-            slice[i * dim1 + j] = data[i * dim1 * dim2 + j * dim2 + k];
+    for (int i = 0; i < dim0; i++) {
+        for (int j = 0; j < dim1; j++) {
+            slice[i * dim1 + j] = data[index(i, j, k)];
         }
     }
     return slice;
 }
 
-// Метод GetValues01(int i, int j): возвращает срез массива по первой и второй координатам (i, j, ..)
+// РњРµС‚РѕРґ GetValues01(int i, int j): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РїРµСЂРІРѕР№ Рё РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (i, j, ..)
 template<typename T>
 std::vector<T> Array3d<T>::GetValues01(int i, int j) const {
-    std::vector<T> slice(dim2); // Вектор для хранения среза по первой и второй координатам
-    // Проходим по всем элементам третьей координаты
+    std::vector<T> slice(dim2); // Р’РµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃСЂРµР·Р° РїРѕ РїРµСЂРІРѕР№ Рё РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј
+    // РџСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
     for (int k = 0; k < dim2; k++) {
-        // Заполняем вектор элементами из исходного массива
-        slice[k] = data[i * dim1 * dim2 + j * dim2 + k];
+        // Р—Р°РїРѕР»РЅСЏРµРј РІРµРєС‚РѕСЂ СЌР»РµРјРµРЅС‚Р°РјРё РёР· РёСЃС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°
+        slice[k] = data[index(i, j, k)];
     }
-    return slice; // Возвращаем срез
+    return slice; // Р’РѕР·РІСЂР°С‰Р°РµРј СЃСЂРµР·
 }
 
-// Метод GetValues02(int i, int k): возвращает срез массива по первой и третьей координатам (i, .., k)
+// РњРµС‚РѕРґ GetValues02(int i, int k): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РїРµСЂРІРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (i, .., k)
 template<typename T>
-std::vector<T> Array3d<T>::GetValues02(int i, int k) const
-{
+std::vector<T> Array3d<T>::GetValues02(int i, int k) const {
     std::vector<T> slice(dim1);
-    for (int j = 0; j < dim1; j++)
-    {
-        slice[j] = data[i * dim1 * dim2 + j * dim2 + k];
+    for (int j = 0; j < dim1; j++) {
+        slice[j] = data[index(i, j, k)];
     }
     return slice;
 }
 
-// Метод GetValues12(int j, int k): возвращает срез массива по второй и третьей координатам (.., j, k)
+// РњРµС‚РѕРґ GetValues12(int j, int k): РІРѕР·РІСЂР°С‰Р°РµС‚ СЃСЂРµР· РјР°СЃСЃРёРІР° РїРѕ РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј (.., j, k)
 template<typename T>
-std::vector<T> Array3d<T>::GetValues12(int j, int k) const
-{
+std::vector<T> Array3d<T>::GetValues12(int j, int k) const {
     std::vector<T> slice(dim0);
-    for (int i = 0; i < dim0; i++)
-    {
-        slice[i] = data[i * dim1 * dim2 + j * dim2 + k];
+    for (int i = 0; i < dim0; i++) {
+        slice[i] = data[index(i, j, k)];
     }
     return slice;
 }
 
-// Метод SetValues0(int i, [][]arr): устанавливает значения в массиве для заданной первой координаты
+// РњРµС‚РѕРґ SetValues0(int i, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РїРµСЂРІРѕР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
 template<typename T>
 void Array3d<T>::SetValues0(int i, const std::vector<std::vector<T>>& arr) {
-    // Проходим по всем элементам второй и третьей координат
+    // РџСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚
     for (int j = 0; j < dim1; j++) {
         for (int k = 0; k < dim2; k++) {
-            // Устанавливаем значения в массиве для заданной первой координаты
-            data[i * dim1 * dim2 + j * dim2 + k] = arr[j][k];
+            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РїРµСЂРІРѕР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
+            data[index(i, j, k)] = arr[j][k];
         }
     }
 }
 
-// Метод SetValues1(int j, [][]arr): устанавливает значения в массиве для заданной второй координаты
+// РњРµС‚РѕРґ SetValues1(int j, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
 template<typename T>
-void Array3d<T>::SetValues1(int j, const std::vector<std::vector<T>>& arr)
-{
-    for (int i = 0; i < dim0; i++)
-    {
-        for (int k = 0; k < dim2; k++)
-        {
-            data[i * dim1 * dim2 + j * dim2 + k] = arr[i][k];
+void Array3d<T>::SetValues1(int j, const std::vector<std::vector<T>>& arr) {
+    for (int i = 0; i < dim0; i++) {
+        for (int k = 0; k < dim2; k++) {
+            data[index(i, j, k)] = arr[i][k];
         }
     }
 }
 
-// Метод SetValues2(int k, [][]arr): устанавливает значения в массиве для заданной третьей координаты
+// РњРµС‚РѕРґ SetValues2(int k, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
 template<typename T>
-void Array3d<T>::SetValues2(int k, const std::vector<std::vector<T>>& arr)
-{
-    for (int i = 0; i < dim0; i++)
-    {
-        for (int j = 0; j < dim1; j++)
-        {
-            data[i * dim1 * dim2 + j * dim2 + k] = arr[i][j];
+void Array3d<T>::SetValues2(int k, const std::vector<std::vector<T>>& arr) {
+    for (int i = 0; i < dim0; i++) {
+        for (int j = 0; j < dim1; j++) {
+            data[index(i, j, k)] = arr[i][j];
         }
     }
 }
 
-// Метод SetValues01(int i, int j, [][]arr): устанавливает значения в массиве для заданных первой и второй координат
+// РњРµС‚РѕРґ SetValues01(int i, int j, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РїРµСЂРІРѕР№ Рё РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚
 template<typename T>
 void Array3d<T>::SetValues01(int i, int j, const std::vector<std::vector<T>>& arr) {
-    // Проходим по всем элементам третьей координаты
+    // РџСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
     for (int k = 0; k < dim2; k++) {
-        // Устанавливаем значения в массиве для заданных первой и второй координат
-        data[i * dim1 * dim2 + j * dim2 + k] = arr[k];
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РїРµСЂРІРѕР№ Рё РІС‚РѕСЂРѕР№ РєРѕРѕСЂРґРёРЅР°С‚
+        data[index(i, j, k)] = arr[k];
     }
 }
 
-// Метод SetValues02(int i, int k, [][]arr): устанавливает значения в массиве для заданных первой и третьей координат
+// РњРµС‚РѕРґ SetValues02(int i, int k, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РїРµСЂРІРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚
 template<typename T>
-void Array3d<T>::SetValues02(int i, int k, const std::vector<std::vector<T>>& arr)
-{
-    for (int j = 0; j < dim1; j++)
-    {
-        data[i * dim1 * dim2 + j * dim2 + k] = arr[j];
+void Array3d<T>::SetValues02(int i, int k, const std::vector<std::vector<T>>& arr) {
+    for (int j = 0; j < dim1; j++) {
+        data[index(i, j, k)] = arr[j];
     }
 }
 
-// Метод SetValues12(int j, int k, [][]arr): устанавливает значения в массиве для заданных второй и третьей координат
+// РњРµС‚РѕРґ SetValues12(int j, int k, [][]arr): СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РІ РјР°СЃСЃРёРІРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚СЊРµР№ РєРѕРѕСЂРґРёРЅР°С‚
 template<typename T>
-void Array3d<T>::SetValues12(int j, int k, const std::vector<std::vector<T>>& arr)
-{
-    for (int i = 0; i < dim0; i++)
-    {
-        data[i * dim1 * dim2 + j * dim2 + k] = arr[i];
+void Array3d<T>::SetValues12(int j, int k, const std::vector<std::vector<T>>& arr) {
+    for (int i = 0; i < dim0; i++) {
+        data[index(i, j, k)] = arr[i];
     }
 }
 
+// РњРµС‚РѕРґС‹ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РјР°СЃСЃРёРІР° СЃ РѕРґРёРЅР°РєРѕРІС‹РјРё СЌР»РµРјРµРЅС‚Р°РјРё
 
-// Методы для создания массива с одинаковыми элементами
-
-
-// Создает трехмерный массив, заполненный единицами
+// РЎРѕР·РґР°РµС‚ С‚СЂРµС…РјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ РµРґРёРЅРёС†Р°РјРё
 template<typename T>
 Array3d<T> ones(int dim0, int dim1, int dim2) {
-    Array3d<T> arr(dim0, dim1, dim2); // Создаем экземпляр класса Array3d с заданными размерами
-    T one = static_cast<T>(1); // Получаем значение единицы для типа данных T
-    // Проходим по всем элементам массива
+    Array3d<T> arr(dim0, dim1, dim2); // РЎРѕР·РґР°РµРј СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° Array3d СЃ Р·Р°РґР°РЅРЅС‹РјРё СЂР°Р·РјРµСЂР°РјРё
+    T one = static_cast<T>(1); // РџРѕР»СѓС‡Р°РµРј Р·РЅР°С‡РµРЅРёРµ РµРґРёРЅРёС†С‹ РґР»СЏ С‚РёРїР° РґР°РЅРЅС‹С… T
+    // РџСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј РјР°СЃСЃРёРІР°
     for (int i = 0; i < dim0; i++) {
         for (int j = 0; j < dim1; j++) {
             for (int k = 0; k < dim2; k++) {
-                // Устанавливаем значение единицы для каждого элемента массива
+                // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РµРЅРёРµ РµРґРёРЅРёС†С‹ РґР»СЏ РєР°Р¶РґРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
                 arr(i, j, k) = one;
             }
         }
@@ -228,9 +209,7 @@ Array3d<T> ones(int dim0, int dim1, int dim2) {
     return arr;
 }
 
-
-
-// Создает трехмерный массив, заполненный нулями
+// РЎРѕР·РґР°РµС‚ С‚СЂРµС…РјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ РЅСѓР»СЏРјРё
 template<typename T>
 Array3d<T> zeros(int dim0, int dim1, int dim2) {
     Array3d<T> arr(dim0, dim1, dim2);
@@ -245,15 +224,14 @@ Array3d<T> zeros(int dim0, int dim1, int dim2) {
     return arr;
 }
 
-
-// Создает трехмерный массив, заполненный заданным значением
+// РЎРѕР·РґР°РµС‚ С‚СЂРµС…РјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ Р·Р°РґР°РЅРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј
 template<typename T>
 Array3d<T> fill(int dim0, int dim1, int dim2, T value) {
     Array3d<T> arr(dim0, dim1, dim2);
     for (int i = 0; i < dim0; i++) {
         for (int j = 0; j < dim1; j++) {
             for (int k = 0; k < dim2; k++) {
-                // Устанавливаем каждому элементу значение, заданное параметром value
+                // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РєР°Р¶РґРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ Р·РЅР°С‡РµРЅРёРµ, Р·Р°РґР°РЅРЅРѕРµ РїР°СЂР°РјРµС‚СЂРѕРј value
                 arr(i, j, k) = value;
             }
         }
