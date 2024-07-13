@@ -4,45 +4,44 @@
 #include <functional>
 #include <stdexcept>
 
-// Базовый класс для численного расчета интегралов
+// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ С‡РёСЃР»РµРЅРЅРѕРіРѕ СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»РѕРІ
 class IntegralCalculator {
 protected:
-    int numPoints; // Число точек для вычисления интеграла
-    double step; // Шаг вычисления интеграла
-    double tolerance; // Точность вычислений
+    double step; // РЁР°Рі РІС‹С‡РёСЃР»РµРЅРёСЏ РёРЅС‚РµРіСЂР°Р»Р°
+    double tolerance; // РўРѕС‡РЅРѕСЃС‚СЊ РІС‹С‡РёСЃР»РµРЅРёР№
 
 public:
-    // Конструктор класса с инициализацией числа точек и точности
-    IntegralCalculator(int numPoints, double tolerance);
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° СЃ РёРЅРёС†РёР°Р»РёР·Р°С†РёРµР№ С‚РѕС‡РЅРѕСЃС‚Рё
+    IntegralCalculator(double tolerance);
 
-    // Виртуальный метод для расчета интеграла
-    virtual double Calc(std::function<double(double)> func, double lowerBound, double upperBound) = 0;
+    // Р’РёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ РґР»СЏ СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»Р°
+    virtual double Calc(std::function<double(double)> func, double lowerBound, double upperBound, int numPoints) = 0;
 
-    // Метод для установки шага вычисления
-    void setStep(double lowerBound, double upperBound);
+    // РњРµС‚РѕРґ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё С€Р°РіР° РІС‹С‡РёСЃР»РµРЅРёСЏ
+    void setStep(double lowerBound, double upperBound, int numPoints);
 
-    // Виртуальный деструктор
+    // Р’РёСЂС‚СѓР°Р»СЊРЅС‹Р№ РґРµСЃС‚СЂСѓРєС‚РѕСЂ
     virtual ~IntegralCalculator() = default;
 };
 
-// Класс для расчета интегралов методом трапеций
+// РљР»Р°СЃСЃ РґР»СЏ СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»РѕРІ РјРµС‚РѕРґРѕРј С‚СЂР°РїРµС†РёР№
 class TrapezoidalIntegralCalculator : public IntegralCalculator {
 public:
-    // Конструктор класса
-    TrapezoidalIntegralCalculator(int numPoints, double tolerance);
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР°
+    TrapezoidalIntegralCalculator(double tolerance);
 
-    // Реализация метода расчета интеграла
-    double Calc(std::function<double(double)> func, double lowerBound, double upperBound) override;
+    // Р РµР°Р»РёР·Р°С†РёСЏ РјРµС‚РѕРґР° СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»Р°
+    double Calc(std::function<double(double)> func, double lowerBound, double upperBound, int numPoints) override;
 };
 
-// Класс для расчета интегралов методом Симпсона (парабол)
+// РљР»Р°СЃСЃ РґР»СЏ СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»РѕРІ РјРµС‚РѕРґРѕРј РЎРёРјРїСЃРѕРЅР° (РїР°СЂР°Р±РѕР»)
 class SimpsonIntegralCalculator : public IntegralCalculator {
 public:
-    // Конструктор класса
-    SimpsonIntegralCalculator(int numPoints, double tolerance);
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР°
+    SimpsonIntegralCalculator(double tolerance);
 
-    // Реализация метода расчета интеграла
-    double Calc(std::function<double(double)> func, double lowerBound, double upperBound) override;
+    // Р РµР°Р»РёР·Р°С†РёСЏ РјРµС‚РѕРґР° СЂР°СЃС‡РµС‚Р° РёРЅС‚РµРіСЂР°Р»Р°
+    double Calc(std::function<double(double)> func, double lowerBound, double upperBound, int numPoints) override;
 };
 
 #endif // METHODS_HPP
