@@ -17,15 +17,15 @@ int main() {
     double tolerance = 1e-6;
 
     // Создаем объекты для расчета интегралов методами трапеций и парабол (Симпсона)
-    TrapezoidalIntegralCalculator trapezoidalCalculator(numPoints, tolerance);
-    SimpsonIntegralCalculator simpsonCalculator(numPoints, tolerance);
+    TrapezoidalIntegralCalculator trapezoidalCalculator(tolerance);
+    SimpsonIntegralCalculator simpsonCalculator(tolerance);
 
     // Расчет интеграла методом трапеций
-    double resultTrapezoidal = trapezoidalCalculator.Calc(exampleFunction, lowerBound, upperBound);
+    double resultTrapezoidal = trapezoidalCalculator.Calc(exampleFunction, lowerBound, upperBound, numPoints);
     std::cout << "Метод трапеций: " << resultTrapezoidal << std::endl;
 
     // Расчет интеграла методом Симпсона
-    double resultSimpson = simpsonCalculator.Calc(exampleFunction, lowerBound, upperBound);
+    double resultSimpson = simpsonCalculator.Calc(exampleFunction, lowerBound, upperBound, numPoints);
     std::cout << "Метод Симпсона(парабол): " << resultSimpson << std::endl;
 
     // Проверка
